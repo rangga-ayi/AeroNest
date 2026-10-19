@@ -1,0 +1,222 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background-color: #0a0f16;
+  color: #e1e8f2;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* Safe area handling untuk iPhone notch & Android navigation gestures */
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* M3 Target Sentuh Ergonomis Minimum 48x48dp */
+.touch-target {
+  min-width: 48px;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* M3 Tonal Surface Cards */
+.m3-card {
+  background-color: #131b26; /* m3-surface-container */
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px; /* M3 Large Shape */
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.m3-card-high {
+  background-color: #192330; /* m3-surface-container-high */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px; /* M3 Extra Large Shape untuk dialog/sheet */
+}
+
+/* 3D Canvas Touch Scroll Fix */
+.touch-pan-y-canvas,
+.touch-pan-y-canvas canvas {
+  touch-action: pan-y !important;
+}
+
+/* Tipografi Khusus Markdown AI Insight (V1 Parity: Jelas, Berjenjang, & Nyaman Dibaca) */
+.ai-markdown-content {
+  font-size: 0.94rem;
+  line-height: 1.75;
+  color: #cbd5e1;
+  letter-spacing: 0.01em;
+}
+
+.ai-markdown-content h1,
+.ai-markdown-content h2,
+.ai-markdown-content h3,
+.ai-markdown-content h4 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  line-height: 1.35;
+}
+
+.ai-markdown-content h1 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ai-markdown-content h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ai-markdown-content h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #00f2fe; /* Aksen Cyan Cerah khas V1 */
+  margin-top: 1.5rem;
+  margin-bottom: 0.65rem;
+}
+
+.ai-markdown-content h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.ai-markdown-content p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.ai-markdown-content strong,
+.ai-markdown-content b {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.ai-markdown-content ul {
+  list-style-type: disc !important;
+  padding-left: 1.35rem !important;
+  margin-top: 0.5rem;
+  margin-bottom: 1.15rem;
+}
+
+.ai-markdown-content ol {
+  list-style-type: decimal !important;
+  padding-left: 1.35rem !important;
+  margin-top: 0.5rem;
+  margin-bottom: 1.15rem;
+}
+
+.ai-markdown-content li {
+  margin-bottom: 0.5rem;
+  line-height: 1.7;
+}
+
+.ai-markdown-content li::marker {
+  color: #00f2fe;
+}
+
+.ai-markdown-content blockquote {
+  border-left: 3.5px solid #00f2fe;
+  padding: 0.9rem 1.25rem;
+  margin: 1.25rem 0;
+  color: #e2e8f0;
+  background: rgba(0, 242, 254, 0.07);
+  border-radius: 0 12px 12px 0;
+  border-top: 1px solid rgba(0, 242, 254, 0.12);
+  border-right: 1px solid rgba(0, 242, 254, 0.12);
+  border-bottom: 1px solid rgba(0, 242, 254, 0.12);
+}
+
+.ai-markdown-content blockquote > *:last-child {
+  margin-bottom: 0;
+}
+
+.ai-markdown-content blockquote h2,
+.ai-markdown-content blockquote h3,
+.ai-markdown-content blockquote h4 {
+  margin-top: 0;
+  margin-bottom: 0.6rem;
+  color: #70f7ff;
+  font-size: 1rem;
+  font-weight: 700;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.ai-markdown-content code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(0, 242, 254, 0.1);
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+  color: #70f7ff;
+  font-size: 0.88em;
+}
+
+.ai-markdown-content pre {
+  background: #0e141c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1.25rem 0;
+}
+
+.ai-markdown-content pre code {
+  background: transparent;
+  padding: 0;
+  color: #e1e8f2;
+}
+
+.ai-markdown-content table {
+  width: 100%;
+  margin: 1.25rem 0;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.ai-markdown-content th,
+.ai-markdown-content td {
+  padding: 0.65rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: left;
+  vertical-align: top;
+}
+
+.ai-markdown-content th {
+  background: rgba(255, 255, 255, 0.06);
+  color: #f1f5f9;
+  font-weight: 600;
+}
+
+.ai-markdown-content tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.ai-markdown-content hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 1.5rem 0;
+}
+

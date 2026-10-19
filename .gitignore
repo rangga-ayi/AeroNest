@@ -1,0 +1,117 @@
+# ==========================================
+# GITIGNORE - AERONEST / IOT MONITORING
+# ==========================================
+
+# ------------------------------------------
+# 1. Kredensial & Rahasia (KRUSIAL - JANGAN DI-COMMIT)
+# ------------------------------------------
+# Firebase Admin SDK Service Account Keys & Backups
+*firebase-adminsdk*.json
+*firebase_adminsdk*.json
+*-adminsdk-*.json
+!/firebase_adminsdk_contoh.json
+Backup_Firebase_*.json
+Backup_*.json
+
+# Firmware Secrets & Skrip Nyata
+secrets.h
+**/secrets.h
+analisa_lab.py
+maintenance_db.py
+
+# Environment variables
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
+
+# ------------------------------------------
+# 2. File Log, Data Dump & Laporan AI
+# ------------------------------------------
+Laporan_AI_*.txt
+Data_Lab_*.csv
+*.bak
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ------------------------------------------
+# 3. Model 3D Mentah & Binary Berat
+# ------------------------------------------
+*.blend
+*.blend1
+*.blend[0-9]
+/aeronest_cozy_room_fixed.glb
+
+# ------------------------------------------
+# 4. Agent Tooling, Local Notes & Indexer
+# ------------------------------------------
+.codegraph/
+.omc/
+.superpowers/
+/plan.md
+/hasil_audit.md
+/docs/
+
+# ------------------------------------------
+# 5. Build Artifacts, Cache & Dependencies
+# ------------------------------------------
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+.eslintcache
+
+# Cache Python & Virtual Environment
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# ------------------------------------------
+# 6. Sistem Operasi & IDE
+# ------------------------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# ------------------------------------------
+# 7. Root Whitelist Filter (Perlindungan Tambahan Root)
+# ------------------------------------------
+/*
+!/.gitignore
+!/.github/
+!/README.md
+!/CONTEXT.md
+!/.env.example
+!/LICENSE
+!/index.html
+!/package.json
+!/package-lock.json
+!/tsconfig.json
+!/vite.config.ts
+!/tailwind.config.js
+!/postcss.config.js
+!/src/
+!/public/
+!/tests/
+!/Assets/
+!/Wemos_BMP280_ATH20_Firebase/
+!/analisa_lab_contoh.py
+!/maintenance_db_contoh.py
+!/firebase_adminsdk_contoh.json

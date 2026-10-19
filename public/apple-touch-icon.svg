@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <defs>
+    <linearGradient id="appleAeroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#00f2fe" />
+    </linearGradient>
+    <filter id="appleGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  <!-- Rounded Squircle iOS-friendly Background -->
+  <rect width="180" height="180" rx="40" fill="#0f172a" />
+  <!-- Outer Hexagon -->
+  <path
+    d="M90 28 L148 61 L148 119 L90 152 L32 119 L32 61 Z"
+    stroke="url(#appleAeroGrad)"
+    stroke-width="9"
+    stroke-linejoin="round"
+    fill="rgba(15, 23, 42, 0.9)"
+  />
+  <!-- Inner Dashed Hexagon -->
+  <path
+    d="M62 74 L90 58 L118 74 L118 106 L90 122 L62 106 Z"
+    stroke="#00f2fe"
+    stroke-width="5.5"
+    stroke-dasharray="7 3.5"
+    fill="none"
+  />
+  <!-- Center Sensor Node -->
+  <circle cx="90" cy="90" r="11" fill="#10b981" filter="url(#appleGlow)" />
+</svg>

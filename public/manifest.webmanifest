@@ -1,0 +1,26 @@
+{
+  "name": "AeroNest - IoT Environmental Monitoring",
+  "short_name": "AeroNest",
+  "description": "Sistem pemantauan suhu dan kelembapan ruangan serta cuaca menggunakan Wemos D1 Mini ESP8266, dilengkapi tampilan 3D yang diperbarui secara langsung dan analisis data otomatis.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#10b981",
+  "categories": ["utilities", "productivity", "weather"],
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "apple-touch-icon.svg",
+      "sizes": "180x180",
+      "type": "image/svg+xml",
+      "purpose": "maskable any"
+    }
+  ]
+}
