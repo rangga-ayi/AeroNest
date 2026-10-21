@@ -12,14 +12,12 @@ import {
   Thermometer,
   Droplets,
   Download,
-  Sliders,
   Sparkles,
   Sun,
   RefreshCw,
   X,
-  ChevronDown,
-  ChevronUp,
   Radio,
+  Menu,
 } from 'lucide-react';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import { TelemetryRecord, EnvironmentalIndices, LaporanAI } from '../../types/telemetry';
@@ -238,6 +236,8 @@ export const SceneExporterBridge: React.FC<SceneExporterBridgeProps> = ({ export
   return null;
 };
 
+
+
 export const LabCanvas3D: React.FC<LabCanvas3DProps> = ({
   latest,
   indices,
@@ -246,9 +246,11 @@ export const LabCanvas3D: React.FC<LabCanvas3DProps> = ({
   const [activeInspect, setActiveInspect] = useState<'wemos' | 'battery' | 'sensor' | null>(null);
   const [cameraKey, setCameraKey] = useState(0);
   const [showQuickSummary, setShowQuickSummary] = useState(false);
+  const [isDemoMenuOpen, setIsDemoMenuOpen] = useState(false);
   const [exportTrigger, setExportTrigger] = useState(0);
   const [isExporting, setIsExporting] = useState(false);
   const summaryRef = useRef<HTMLDivElement>(null);
+  const demoMenuRef = useRef<HTMLDivElement>(null);
 
   // Tutup popup ringkasan saat mengklik di luar area popup atau menekan tombol Escape
   useEffect(() => {
@@ -273,6 +275,30 @@ export const LabCanvas3D: React.FC<LabCanvas3DProps> = ({
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [showQuickSummary]);
+
+  // Tutup popup menu demo saat mengklik di luar area popup atau menekan tombol Escape
+  useEffect(() => {
+    if (!isDemoMenuOpen) return;
+
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (demoMenuRef.current && !demoMenuRef.current.contains(event.target as Node)) {
+        setIsDemoMenuOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsDemoMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('pointerdown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isDemoMenuOpen]);
 
   // State Mode Demo Visual 3D (Hanya memengaruhi tampilan 3D lokal)
   const [demoState, setDemoState] = useState<Demo3DState>({
@@ -389,7 +415,7 @@ export const LabCanvas3D: React.FC<LabCanvas3DProps> = ({
           shadows
           orthographic
           className="touch-pan-y-canvas"
-          camera={{ position: [14.2, 17.0, 16.8], zoom: 65, near: 0.1, far: 1000 }}
+          camera={{ position: [15.36, 8.19, 21.37], zoom: 75.2, near: 0.1, far: 1000 }}
         >
           {/* Fill light lembut pelengkap agar sudut ruangan tetap berdimensi tanpa overexposure */}
           <directionalLight
@@ -412,10 +438,11 @@ export const LabCanvas3D: React.FC<LabCanvas3DProps> = ({
           />
 
           <OrbitControls
-            enabled={controlsEnabled}
             makeDefault
             enableDamping
             dampingFactor={0.05}
+            enableRotate={controlsEnabled}
+            enableZoom={controlsEnabled}
             enablePan={false}
             target={[0, 0.75, 0]}
             minZoom={45}
@@ -428,288 +455,343 @@ export const LabCanvas3D: React.FC<LabCanvas3DProps> = ({
         </Canvas>
       </div>
 
-      {/* 2. Tombol Toggle Mode Demo di Sudut Kanan Atas (z-30) */}
-      <div className="absolute top-3 right-4 z-30 flex items-center gap-2">
+      {/* 2. Menu FAB Mode Demo di Sudut Kanan Atas (z-40) */}
+      <div ref={demoMenuRef} className="absolute top-3 right-4 z-40">
         <button
-          onClick={() => setDemoState((prev) => ({
-            ...prev,
-            enabled: !prev.enabled,
-            isExpanded: true,
-            suhu: !prev.enabled && latest?.suhu !== undefined ? latest.suhu : prev.suhu,
-            kelembapan: !prev.enabled && latest?.kelembapan !== undefined ? latest.kelembapan : prev.kelembapan,
-            tekanan: !prev.enabled && latest?.tekanan !== undefined ? latest.tekanan : prev.tekanan,
-            tegangan_vcc: !prev.enabled && latest?.tegangan_vcc !== undefined ? latest.tegangan_vcc : prev.tegangan_vcc,
-            isOnline: !prev.enabled && indices.isOnline !== undefined ? indices.isOnline : prev.isOnline,
-          }))}
-          className={`touch-target p-2 rounded-m3-full shadow-md backdrop-blur-md transition-all active:scale-95 cursor-pointer flex items-center justify-center ${
-            demoState.enabled
-              ? 'bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-amber-500/25 ring-2 ring-amber-400/50'
-              : 'bg-m3-surface-container-high/90 text-amber-400 border border-white/10 hover:border-amber-400/40 hover:scale-105'
+          onClick={() => setIsDemoMenuOpen((prev) => !prev)}
+          className={`touch-target relative p-2 rounded-m3-full border shadow-md backdrop-blur-md transition-all flex items-center justify-center cursor-pointer ${
+            isDemoMenuOpen
+              ? 'bg-amber-500 text-white border-amber-400 shadow-amber-500/30 ring-2 ring-amber-400/40'
+              : demoState.enabled
+              ? 'bg-gradient-to-r from-amber-500 to-rose-500 text-white border-amber-400/60 shadow-amber-500/25'
+              : 'bg-m3-surface-container-high/90 text-slate-300 border-white/10 hover:border-amber-400/50 hover:text-amber-400 hover:scale-105 active:scale-95'
           }`}
-          title={demoState.enabled ? 'Matikan Mode Demo (Kembali ke Sensor Live)' : 'Mode Demo Visual 3D'}
-          aria-label="Mode Demo Visual 3D"
+          title={isDemoMenuOpen ? 'Tutup Pengatur Mode Demo' : 'Pengatur Mode Demo Visual 3D'}
+          aria-label="Pengatur Mode Demo Visual 3D"
         >
-          <Sliders size={16} />
+          <Menu size={16} />
+          {demoState.enabled && !isDemoMenuOpen && (
+            <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5" title="Mode Demo Aktif">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500 border border-slate-900"></span>
+            </span>
+          )}
         </button>
-      </div>
 
-      {/* 4. Panel Kontrol Mode Demo Visual 3D (z-40) */}
-      {demoState.enabled && (
-        <div
-          className={`absolute top-12 right-4 z-40 transition-all duration-300 select-none ${
-            demoState.isExpanded ? 'w-80 sm:w-96' : 'w-auto'
-          }`}
-          onClick={(e) => e.stopPropagation()}
-          onPointerDown={(e) => e.stopPropagation()}
-        >
-          {demoState.isExpanded ? (
-            <div className="p-3.5 rounded-m3-xl bg-m3-surface-container-high/95 border border-amber-500/40 backdrop-blur-md shadow-2xl animate-in fade-in max-h-[290px] sm:max-h-[360px] overflow-y-auto">
-              {/* Header Panel Demo */}
-              <div className="flex items-center justify-between pb-2 border-b border-white/10">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center">
-                    <Sparkles size={13} />
-                  </div>
-                  <div>
-                    <h3 className="text-xs font-bold font-ui text-m3-on-surface flex items-center gap-1.5">
-                      Pengatur Visual 3D
-                      <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 font-mono">
-                        Demo
-                      </span>
-                    </h3>
-                    <p className="text-[10px] text-m3-on-surface-variant font-mono">
-                      Hanya memengaruhi visual 3D • Sensor asli aman
-                    </p>
-                  </div>
+        {/* Popup Pengatur Mode Demo Visual 3D */}
+        {isDemoMenuOpen && (
+          <div
+            className="absolute top-full mt-2.5 right-0 w-[310px] sm:w-[340px] p-3 rounded-m3-xl bg-m3-surface-container-high/95 border border-amber-500/40 backdrop-blur-md shadow-2xl animate-in fade-in select-none max-h-[280px] sm:max-h-[350px] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
+          >
+            {/* Header Panel Demo */}
+            <div className="flex items-center justify-between pb-2 border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+                  <Sparkles size={13} />
                 </div>
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => setDemoState((prev) => ({ ...prev, isExpanded: false }))}
-                    className="p-1 rounded text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                    title="Minimize Panel Demo"
-                  >
-                    <ChevronUp size={15} />
-                  </button>
-                  <button
-                    onClick={() => setDemoState((prev) => ({ ...prev, enabled: false }))}
-                    className="p-1 rounded text-slate-400 hover:text-rose-400 hover:bg-white/10 transition-colors cursor-pointer"
-                    title="Tutup Mode Demo"
-                  >
-                    <X size={15} />
-                  </button>
+                <div>
+                  <h3 className="text-xs font-bold font-ui text-m3-on-surface flex items-center gap-1.5 leading-none">
+                    Pengatur Visual 3D
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-mono font-semibold ${
+                      demoState.enabled ? 'bg-amber-500/20 text-amber-300' : 'bg-white/10 text-slate-400'
+                    }`}>
+                      {demoState.enabled ? 'Demo Aktif' : 'Sensor Asli'}
+                    </span>
+                  </h3>
+                  <p className="text-[10px] text-m3-on-surface-variant font-mono mt-0.5 leading-tight">
+                    Hanya memengaruhi visual 3D • Sensor asli aman
+                  </p>
                 </div>
               </div>
+              <button
+                onClick={() => setIsDemoMenuOpen(false)}
+                className="p-1 rounded text-slate-400 hover:text-rose-400 hover:bg-white/10 transition-colors cursor-pointer shrink-0"
+                title="Tutup Menu Demo"
+              >
+                <X size={15} />
+              </button>
+            </div>
 
-              {/* 1-Tap Presets Cuaca & Fenomena */}
-              <div className="mt-2.5">
-                <label className="text-[10px] font-mono text-m3-on-surface-variant uppercase tracking-wider block mb-1">
-                  Preset Skenario Cepat
-                </label>
-                <div className="grid grid-cols-5 gap-1">
-                  {DEMO_PRESETS.map((p) => {
-                    const isActive =
-                      demoState.timeOfDay === p.timeOfDay &&
-                      Math.abs(demoState.suhu - p.suhu) < 1.0 &&
-                      Math.abs(demoState.kelembapan - p.kelembapan) < 5;
-                    return (
-                      <button
-                        key={p.id}
-                        onClick={() => applyPreset(p)}
-                        className={`px-1 py-1.5 rounded-m3-md text-center transition-all cursor-pointer ${
-                          isActive
-                            ? 'bg-amber-500 text-white font-bold shadow-md shadow-amber-500/30'
-                            : 'bg-m3-surface-container-low/90 text-m3-on-surface hover:bg-white/10'
-                        }`}
-                        title={p.desc}
-                      >
-                        <span className="text-sm block">{p.icon}</span>
-                        <span className="text-[9px] font-ui truncate block">{p.label.split(' ')[0]}</span>
-                      </button>
-                    );
-                  })}
-                </div>
+            {/* Switch ON / OFF Mode Demo */}
+            <div className="mt-2.5 p-2 rounded-m3-lg bg-m3-surface-container-low/90 border border-white/5 flex items-center justify-between">
+              <div className="pr-2">
+                <span className="text-[11px] font-bold font-ui text-m3-on-surface block leading-tight">
+                  Status Mode Demo
+                </span>
+                <span className="text-[9px] text-m3-on-surface-variant font-mono block mt-0.5">
+                  {demoState.enabled ? 'Simulasi visual aktif' : 'Sensor live IoT aktif'}
+                </span>
               </div>
 
-              {/* Interactive Fine-Tuning Sliders */}
-              <div className="mt-3 space-y-2.5 text-xs font-mono">
-                {/* 1. Suhu Slider */}
-                <div className="p-2 rounded bg-m3-surface-container-low/90">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-m3-on-surface-variant flex items-center gap-1.5">
-                      <Thermometer size={13} className="text-rose-400" /> Suhu Kamar
-                    </span>
-                    <span className="font-bold text-m3-on-surface">
-                      {demoState.suhu.toFixed(1)}°C
-                      <span className={`text-[10px] ml-1.5 px-1.5 py-0.2 rounded font-semibold ${
-                        demoState.suhu >= 33
-                          ? 'bg-rose-500/20 text-rose-300'
-                          : demoState.suhu >= 29
-                          ? 'bg-amber-500/20 text-amber-300'
-                          : demoState.suhu < 24
-                          ? 'bg-sky-500/20 text-sky-300'
-                          : 'bg-emerald-500/20 text-emerald-300'
-                      }`}>
-                        {demoState.suhu >= 33 ? 'Panas (>33° LED Merah)' : demoState.suhu >= 29 ? 'Hangat' : demoState.suhu < 24 ? 'Sejuk (Biru)' : 'Nyaman (Hijau)'}
-                      </span>
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="16.0"
-                    max="40.0"
-                    step="0.5"
-                    value={demoState.suhu}
-                    onChange={(e) => setDemoState((prev) => ({ ...prev, suhu: parseFloat(e.target.value) }))}
-                    className="w-full accent-rose-500 cursor-pointer h-1.5 bg-white/20 rounded-lg"
-                  />
-                </div>
-
-                {/* 2. Kelembapan Slider */}
-                <div className="p-2 rounded bg-m3-surface-container-low/90">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-m3-on-surface-variant flex items-center gap-1.5">
-                      <Droplets size={13} className="text-sky-400" /> Kelembapan (RH)
-                    </span>
-                    <span className="font-bold text-sky-300">
-                      {demoState.kelembapan.toFixed(0)}%
-                      <span className={`text-[10px] ml-1.5 px-1.5 py-0.2 rounded font-semibold ${
-                        demoState.kelembapan > 70
-                          ? 'bg-sky-500/25 text-sky-200'
-                          : demoState.kelembapan < 40
-                          ? 'bg-amber-500/20 text-amber-300'
-                          : 'bg-emerald-500/20 text-emerald-300'
-                      }`}>
-                        {demoState.kelembapan > 70 ? 'Embun Kaca Aktif' : demoState.kelembapan < 40 ? 'Daun Layu/Kering' : 'Daun Hijau Segar'}
-                      </span>
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="20"
-                    max="100"
-                    step="1"
-                    value={demoState.kelembapan}
-                    onChange={(e) => setDemoState((prev) => ({ ...prev, kelembapan: parseInt(e.target.value) }))}
-                    className="w-full accent-sky-400 cursor-pointer h-1.5 bg-white/20 rounded-lg"
-                  />
-                </div>
-
-                {/* 3. Tekanan Barometer Slider */}
-                <div className="p-2 rounded bg-m3-surface-container-low/90">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-m3-on-surface-variant flex items-center gap-1.5">
-                      <Gauge size={13} className="text-amber-400" /> Tekanan Barometer
-                    </span>
-                    <span className="font-bold text-m3-on-surface">
-                      {demoState.tekanan.toFixed(0)} hPa
-                      <span className={`text-[10px] ml-1.5 px-1.5 py-0.2 rounded font-semibold ${
-                        demoState.tekanan < 1008
-                          ? 'bg-slate-500/30 text-slate-300'
-                          : demoState.tekanan >= 1013
-                          ? 'bg-amber-500/20 text-amber-300'
-                          : 'bg-sky-500/20 text-sky-300'
-                      }`}>
-                        {demoState.tekanan < 1008 ? 'Mendung & Hujan' : demoState.tekanan >= 1013 ? 'Cerah Terik' : 'Cerah Normal'}
-                      </span>
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="995"
-                    max="1025"
-                    step="1"
-                    value={demoState.tekanan}
-                    onChange={(e) => setDemoState((prev) => ({ ...prev, tekanan: parseInt(e.target.value) }))}
-                    className="w-full accent-amber-400 cursor-pointer h-1.5 bg-white/20 rounded-lg"
-                  />
-                </div>
-
-                {/* 4. Suasana Waktu (Time of Day) */}
-                <div className="p-2 rounded bg-m3-surface-container-low/90">
-                  <div className="flex justify-between items-center mb-1.5">
-                    <span className="text-m3-on-surface-variant flex items-center gap-1.5">
-                      <Sun size={13} className="text-amber-300" /> Suasana Waktu
-                    </span>
-                    <span className="font-bold text-amber-300 capitalize">{demoState.timeOfDay}</span>
-                  </div>
-                  <div className="grid grid-cols-4 gap-1">
-                    {(['pagi', 'siang', 'sore', 'malam'] as TimeOfDay[]).map((t) => (
-                      <button
-                        key={t}
-                        onClick={() => setDemoState((prev) => ({ ...prev, timeOfDay: t }))}
-                        className={`py-1 rounded text-center font-ui transition-colors cursor-pointer ${
-                          demoState.timeOfDay === t
-                            ? 'bg-amber-500 text-white font-bold'
-                            : 'bg-white/5 text-slate-300 hover:bg-white/10'
-                        }`}
-                      >
-                        {t === 'pagi' && '🌅 Pagi'}
-                        {t === 'siang' && '☀️ Siang'}
-                        {t === 'sore' && '🌇 Sore'}
-                        {t === 'malam' && '🌙 Malam'}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* 5. Toggles: Transmisi & Online */}
-                <div className="grid grid-cols-2 gap-2 pt-0.5">
-                  <button
-                    onClick={() => setDemoState((prev) => ({ ...prev, isTransmitting: !prev.isTransmitting }))}
-                    className={`p-1.5 rounded flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
-                      demoState.isTransmitting
-                        ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/40'
-                        : 'bg-m3-surface-container-low/90 text-slate-400 border border-white/5 hover:text-white'
-                    }`}
-                  >
-                    <Radio size={12} className={demoState.isTransmitting ? 'animate-pulse text-emerald-400' : ''} />
-                    <span>{demoState.isTransmitting ? 'TX Aktif' : 'Simulasi TX'}</span>
-                  </button>
-
-                  <button
-                    onClick={() => setDemoState((prev) => ({ ...prev, isOnline: !prev.isOnline }))}
-                    className={`p-1.5 rounded flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
-                      demoState.isOnline
-                        ? 'bg-sky-500/25 text-sky-300 border border-sky-500/40'
-                        : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                    }`}
-                  >
-                    <span className={`w-1.5 h-1.5 rounded-full ${demoState.isOnline ? 'bg-emerald-400' : 'bg-amber-400'}`} />
-                    <span>{demoState.isOnline ? 'Online' : 'Standby'}</span>
-                  </button>
-                </div>
-
-                {/* Tombol Reset ke Sensor Live */}
-                <div className="pt-1 flex items-center justify-between border-t border-white/10">
-                  <button
-                    onClick={resetToLiveSensor}
-                    className="text-[10px] text-m3-primary hover:text-amber-300 flex items-center gap-1 transition-colors cursor-pointer"
-                  >
-                    <RefreshCw size={11} /> Reset ke Sensor Asli
-                  </button>
-                  <button
-                    onClick={() => setDemoState((prev) => ({ ...prev, isExpanded: false }))}
-                    className="text-[10px] text-slate-400 hover:text-white transition-colors cursor-pointer"
-                  >
-                    Sembunyikan Panel
-                  </button>
-                </div>
+              {/* Segmented Buttons ON / OFF */}
+              <div className="flex items-center bg-black/40 p-0.5 rounded-full border border-white/10 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setDemoState((prev) => ({ ...prev, enabled: false }))}
+                  className={`px-3 py-1 text-[10px] font-mono font-bold rounded-full transition-all cursor-pointer ${
+                    !demoState.enabled
+                      ? 'bg-rose-500 text-white shadow-sm'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                  title="Matikan Mode Demo (Kembali ke Sensor Live)"
+                >
+                  OFF
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDemoState((prev) => ({
+                      ...prev,
+                      enabled: true,
+                      suhu: !prev.enabled && latest?.suhu !== undefined ? latest.suhu : prev.suhu,
+                      kelembapan: !prev.enabled && latest?.kelembapan !== undefined ? latest.kelembapan : prev.kelembapan,
+                      tekanan: !prev.enabled && latest?.tekanan !== undefined ? latest.tekanan : prev.tekanan,
+                      tegangan_vcc: !prev.enabled && latest?.tegangan_vcc !== undefined ? latest.tegangan_vcc : prev.tegangan_vcc,
+                      isOnline: !prev.enabled && indices.isOnline !== undefined ? indices.isOnline : prev.isOnline,
+                    }));
+                  }}
+                  className={`px-3 py-1 text-[10px] font-mono font-bold rounded-full transition-all cursor-pointer ${
+                    demoState.enabled
+                      ? 'bg-gradient-to-r from-amber-500 to-emerald-500 text-white shadow-sm shadow-emerald-500/25'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                  title="Aktifkan Mode Demo Visual 3D"
+                >
+                  ON
+                </button>
               </div>
             </div>
-          ) : (
-            /* Panel Minimized Pill */
-            <button
-              onClick={() => setDemoState((prev) => ({ ...prev, isExpanded: true }))}
-              className="px-3 py-1.5 rounded-m3-full bg-m3-surface-container-high/95 text-amber-300 border border-amber-500/40 shadow-xl backdrop-blur-md flex items-center gap-2 hover:bg-white/10 transition-all cursor-pointer"
-              title="Buka Pengatur Variabel Mode Demo"
-            >
-              <Sliders size={13} className="text-amber-400" />
-              <span className="text-xs font-mono font-medium">Buka Panel Demo ({demoState.suhu}°C, {demoState.kelembapan}%)</span>
-              <ChevronDown size={13} />
-            </button>
-          )}
-        </div>
-      )}
+
+            {!demoState.enabled ? (
+              <div className="mt-2.5 p-3 rounded-m3-lg bg-white/5 border border-dashed border-white/10 text-center">
+                <p className="text-[11px] text-slate-300 font-ui font-medium">
+                  Mode Demo sedang <span className="text-rose-400 font-bold">OFF</span>
+                </p>
+                <p className="text-[10px] text-m3-on-surface-variant font-mono mt-1">
+                  Tampilan 3D saat ini sinkron dengan data sensor live IoT ({latest?.suhu !== undefined ? `${latest.suhu.toFixed(1)}°C` : '--'} • {latest?.kelembapan !== undefined ? `${latest.kelembapan.toFixed(0)}%` : '--'} • {latest?.tekanan !== undefined ? `${latest.tekanan.toFixed(0)} hPa` : '--'}).
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDemoState((prev) => ({
+                      ...prev,
+                      enabled: true,
+                      suhu: latest?.suhu !== undefined ? latest.suhu : prev.suhu,
+                      kelembapan: latest?.kelembapan !== undefined ? latest.kelembapan : prev.kelembapan,
+                      tekanan: latest?.tekanan !== undefined ? latest.tekanan : prev.tekanan,
+                      tegangan_vcc: latest?.tegangan_vcc !== undefined ? latest.tegangan_vcc : prev.tegangan_vcc,
+                      isOnline: indices.isOnline !== undefined ? indices.isOnline : prev.isOnline,
+                    }));
+                  }}
+                  className="mt-2.5 px-3 py-1.5 rounded-m3-md bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-white border border-amber-500/40 text-[10px] font-mono font-bold transition-all cursor-pointer inline-flex items-center gap-1.5"
+                >
+                  <Sparkles size={11} /> Nyalakan Mode Demo (ON)
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* 1-Tap Presets Cuaca & Fenomena */}
+                <div className="mt-2.5">
+                  <label className="text-[10px] font-mono text-m3-on-surface-variant uppercase tracking-wider block mb-1">
+                    Preset Skenario Cepat
+                  </label>
+                  <div className="grid grid-cols-5 gap-1">
+                    {DEMO_PRESETS.map((p) => {
+                      const isActive =
+                        demoState.timeOfDay === p.timeOfDay &&
+                        Math.abs(demoState.suhu - p.suhu) < 1.0 &&
+                        Math.abs(demoState.kelembapan - p.kelembapan) < 5;
+                      return (
+                        <button
+                          key={p.id}
+                          onClick={() => applyPreset(p)}
+                          className={`px-1 py-1 rounded-m3-md text-center transition-all cursor-pointer ${
+                            isActive
+                              ? 'bg-amber-500 text-white font-bold shadow-md shadow-amber-500/30'
+                              : 'bg-m3-surface-container-low/90 text-m3-on-surface hover:bg-white/10'
+                          }`}
+                          title={p.desc}
+                        >
+                          <span className="text-xs block">{p.icon}</span>
+                          <span className="text-[9px] font-ui truncate block">{p.label.split(' ')[0]}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Interactive Fine-Tuning Sliders */}
+                <div className="mt-2.5 space-y-2 text-xs font-mono">
+                  {/* 1. Suhu Slider */}
+                  <div className="p-1.5 rounded bg-m3-surface-container-low/90">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-m3-on-surface-variant flex items-center gap-1 text-[11px]">
+                        <Thermometer size={12} className="text-rose-400" /> Suhu
+                      </span>
+                      <span className="font-bold text-m3-on-surface text-[11px]">
+                        {demoState.suhu.toFixed(1)}°C
+                        <span className={`text-[9px] ml-1 px-1 py-0.2 rounded font-semibold ${
+                          demoState.suhu >= 33
+                            ? 'bg-rose-500/20 text-rose-300'
+                            : demoState.suhu >= 29
+                            ? 'bg-amber-500/20 text-amber-300'
+                            : demoState.suhu < 24
+                            ? 'bg-sky-500/20 text-sky-300'
+                            : 'bg-emerald-500/20 text-emerald-300'
+                        }`}>
+                          {demoState.suhu >= 33 ? 'Panas' : demoState.suhu >= 29 ? 'Hangat' : demoState.suhu < 24 ? 'Sejuk' : 'Nyaman'}
+                        </span>
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min="16.0"
+                      max="40.0"
+                      step="0.5"
+                      value={demoState.suhu}
+                      onChange={(e) => setDemoState((prev) => ({ ...prev, suhu: parseFloat(e.target.value) }))}
+                      className="w-full accent-rose-500 cursor-pointer h-1.5 bg-white/20 rounded-lg"
+                    />
+                  </div>
+
+                  {/* 2. Kelembapan Slider */}
+                  <div className="p-1.5 rounded bg-m3-surface-container-low/90">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-m3-on-surface-variant flex items-center gap-1 text-[11px]">
+                        <Droplets size={12} className="text-sky-400" /> RH
+                      </span>
+                      <span className="font-bold text-sky-300 text-[11px]">
+                        {demoState.kelembapan.toFixed(0)}%
+                        <span className={`text-[9px] ml-1 px-1 py-0.2 rounded font-semibold ${
+                          demoState.kelembapan > 70
+                            ? 'bg-sky-500/25 text-sky-200'
+                            : demoState.kelembapan < 40
+                            ? 'bg-amber-500/20 text-amber-300'
+                            : 'bg-emerald-500/20 text-emerald-300'
+                        }`}>
+                          {demoState.kelembapan > 70 ? 'Embun' : demoState.kelembapan < 40 ? 'Kering' : 'Segar'}
+                        </span>
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min="20"
+                      max="100"
+                      step="1"
+                      value={demoState.kelembapan}
+                      onChange={(e) => setDemoState((prev) => ({ ...prev, kelembapan: parseInt(e.target.value) }))}
+                      className="w-full accent-sky-400 cursor-pointer h-1.5 bg-white/20 rounded-lg"
+                    />
+                  </div>
+
+                  {/* 3. Tekanan Barometer Slider */}
+                  <div className="p-1.5 rounded bg-m3-surface-container-low/90">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-m3-on-surface-variant flex items-center gap-1 text-[11px]">
+                        <Gauge size={12} className="text-amber-400" /> Tekanan
+                      </span>
+                      <span className="font-bold text-m3-on-surface text-[11px]">
+                        {demoState.tekanan.toFixed(0)} hPa
+                        <span className={`text-[9px] ml-1 px-1 py-0.2 rounded font-semibold ${
+                          demoState.tekanan < 1008
+                            ? 'bg-slate-500/30 text-slate-300'
+                            : demoState.tekanan >= 1013
+                            ? 'bg-amber-500/20 text-amber-300'
+                            : 'bg-sky-500/20 text-sky-300'
+                        }`}>
+                          {demoState.tekanan < 1008 ? 'Hujan' : demoState.tekanan >= 1013 ? 'Terik' : 'Normal'}
+                        </span>
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min="995"
+                      max="1025"
+                      step="1"
+                      value={demoState.tekanan}
+                      onChange={(e) => setDemoState((prev) => ({ ...prev, tekanan: parseInt(e.target.value) }))}
+                      className="w-full accent-amber-400 cursor-pointer h-1.5 bg-white/20 rounded-lg"
+                    />
+                  </div>
+
+                  {/* 4. Suasana Waktu (Time of Day) */}
+                  <div className="p-1.5 rounded bg-m3-surface-container-low/90">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-m3-on-surface-variant flex items-center gap-1 text-[11px]">
+                        <Sun size={12} className="text-amber-300" /> Waktu
+                      </span>
+                      <span className="font-bold text-amber-300 capitalize text-[11px]">{demoState.timeOfDay}</span>
+                    </div>
+                    <div className="grid grid-cols-4 gap-1">
+                      {(['pagi', 'siang', 'sore', 'malam'] as TimeOfDay[]).map((t) => (
+                        <button
+                          key={t}
+                          onClick={() => setDemoState((prev) => ({ ...prev, timeOfDay: t }))}
+                          className={`py-0.5 rounded text-center font-ui text-[10px] transition-colors cursor-pointer ${
+                            demoState.timeOfDay === t
+                              ? 'bg-amber-500 text-white font-bold'
+                              : 'bg-white/5 text-slate-300 hover:bg-white/10'
+                          }`}
+                        >
+                          {t === 'pagi' && '🌅 Pagi'}
+                          {t === 'siang' && '☀️ Siang'}
+                          {t === 'sore' && '🌇 Sore'}
+                          {t === 'malam' && '🌙 Malam'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 5. Toggles: Transmisi & Online */}
+                  <div className="grid grid-cols-2 gap-1.5 pt-0.5">
+                    <button
+                      onClick={() => setDemoState((prev) => ({ ...prev, isTransmitting: !prev.isTransmitting }))}
+                      className={`p-1 rounded flex items-center justify-center gap-1 transition-colors cursor-pointer text-[10px] ${
+                        demoState.isTransmitting
+                          ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/40'
+                          : 'bg-m3-surface-container-low/90 text-slate-400 border border-white/5 hover:text-white'
+                      }`}
+                    >
+                      <Radio size={11} className={demoState.isTransmitting ? 'animate-pulse text-emerald-400' : ''} />
+                      <span>{demoState.isTransmitting ? 'TX Aktif' : 'Simulasi TX'}</span>
+                    </button>
+
+                    <button
+                      onClick={() => setDemoState((prev) => ({ ...prev, isOnline: !prev.isOnline }))}
+                      className={`p-1 rounded flex items-center justify-center gap-1 transition-colors cursor-pointer text-[10px] ${
+                        demoState.isOnline
+                          ? 'bg-sky-500/25 text-sky-300 border border-sky-500/40'
+                          : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                      }`}
+                    >
+                      <span className={`w-1.5 h-1.5 rounded-full ${demoState.isOnline ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+                      <span>{demoState.isOnline ? 'Online' : 'Standby'}</span>
+                    </button>
+                  </div>
+
+                  {/* Tombol Reset ke Sensor Live */}
+                  <div className="pt-1 flex items-center justify-between border-t border-white/10 text-[10px]">
+                    <button
+                      onClick={resetToLiveSensor}
+                      className="text-m3-primary hover:text-amber-300 flex items-center gap-1 transition-colors cursor-pointer"
+                    >
+                      <RefreshCw size={11} /> Reset Nilai Sensor
+                    </button>
+                    <button
+                      onClick={() => setIsDemoMenuOpen(false)}
+                      className="text-slate-400 hover:text-white transition-colors cursor-pointer"
+                    >
+                      Tutup Menu
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Icon Ringkasan Kamar Compact (z-30) */}
       <div ref={summaryRef} className="absolute top-3 left-4 z-30">
@@ -841,6 +923,8 @@ export const LabCanvas3D: React.FC<LabCanvas3DProps> = ({
           {controlsEnabled ? <Unlock size={16} /> : <Lock size={16} />}
         </button>
       </div>
+
+
 
       {/* Modal Dialog Inspeksi Hardware Interaktif (z-50) */}
       {activeInspect && (
