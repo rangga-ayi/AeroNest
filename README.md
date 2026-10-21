@@ -27,7 +27,7 @@ Untuk memperpanjang masa pakai baterai hingga berbulan-bulan, ESP8266 beroperasi
 
 ### 1. Dashboard Utama (Desktop)
 
-![Dashboard Utama Desktop](Assets/desktop_home.avif)
+![Dashboard Utama Desktop](Assets/Desktop_home.png)
 
 ### 2. Modal Analisis AI (Desktop)
 
@@ -402,7 +402,7 @@ Untuk mencegah kuota penyimpanan gratis Firebase melampaui batas, lakukan pember
 │   └── workflows/
 │       └── deploy.yml                   # CI/CD otomatis deployment ke GitHub Pages via Vite
 ├── Assets/                              # Gambar antarmuka dashboard untuk dokumentasi
-│   ├── desktop_home.avif
+│   ├── Desktop_home.png
 │   ├── desktop_modal_ai.avif
 │   ├── mobile_home.avif
 │   └── mobile_modal_ai.avif
