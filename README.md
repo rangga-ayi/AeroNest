@@ -27,38 +27,36 @@ Untuk memperpanjang masa pakai baterai hingga berbulan-bulan, ESP8266 beroperasi
 
 ### 1. Dashboard Utama (Desktop)
 
-![Dashboard Utama Desktop](Assets/Desktop_home.png)
+![Dashboard Utama Desktop](Assets/desktop_home.avif)
 
 ### 2. Modal Analisis AI (Desktop)
 
 ![Modal Analisis AI Desktop](Assets/desktop_modal_ai.avif)
 
-### 3. Tampilan Mobile
+### 3. Modal Riwayat Telemetri LAB
 
-<p align="center">
-  <img src="Assets/mobile_home.avif" alt="Dashboard Mobile" width="340" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="Assets/mobile_modal_ai.avif" alt="Modal AI Mobile" width="340" />
-</p>
-
----
+## ![Riwayat Telemetri LAB](Assets/desktop_telemetri.avif)
 
 ## Fitur Utama
 
 ### 1. Manajemen Daya Ekstrem & Proteksi Baterai
+
 - **Siklus Deep Sleep 5 Menit:** Mikrokontroler tidur dengan konsumsi arus ~20 µA dan hanya aktif 2–3 detik saat transmisi data.
-- **Proteksi Voltase Kritis (Brownout Prevention):** Pin `A0` memonitor tegangan baterai. Jika voltase berada di bawah ambang batas aman (≤ 3.40V), perangkat otomatis tidur panjang selama 1 jam (*hibernation mode*) untuk melindungi sel baterai dari *over-discharge*.
+- **Proteksi Voltase Kritis (Brownout Prevention):** Pin `A0` memonitor tegangan baterai. Jika voltase berada di bawah ambang batas aman (≤ 3.40V), perangkat otomatis tidur panjang selama 1 jam (_hibernation mode_) untuk melindungi sel baterai dari _over-discharge_.
 - **Estimasi Kapasitas Non-Linear:** Perhitungan persentase sisa baterai mengacu pada kurva karakteristik pelepasan baterai Li-ion 18650 asli, bukan pembagian tegangan linear sederhana.
 
 ### 2. Sensor Presisi & Koreksi Barometrik
+
 - **AHT20 (I2C):** Mengukur temperatur ruangan (°C) dan kelembapan relatif udara (% RH) dengan stabilitas tinggi.
-- **BMP280 (I2C):** Mengukur tekanan barometrik absolut dan otomatis dikonversi ke *Mean Sea Level Pressure* (MSLP) dengan formula barometrik berdasar elevasi lokasi.
+- **BMP280 (I2C):** Mengukur tekanan barometrik absolut dan otomatis dikonversi ke _Mean Sea Level Pressure_ (MSLP) dengan formula barometrik berdasar elevasi lokasi.
 
 ### 3. Jaringan Tangguh & Komunikasi Langsung
+
 - **WiFi Dinamis (Captive Portal via WiFiManager):** Konfigurasi SSID & password mudah melalui antarmuka web smartphone tanpa perlu mengubah kode atau flashing ulang.
 - **Transmisi Firebase REST Ringan:** Pengiriman JSON langsung ke Firebase RTDB menggunakan endpoint REST yang dioptimalkan untuk meminimalkan waktu aktif radio WiFi.
 
 ### 4. Web Dashboard Modern & 3D Digital Twin (React + Vite)
+
 - **Arsitektur Modular Mobile-First (Material Design 3):** Dibangun dengan React 18, TypeScript, Tailwind CSS, dan Vite. Menerapkan sistem desain Google Material Design 3 (M3 / Material You) dengan navigasi bottom bar adaptif, tonal elevation dark theme, serta modal bottom sheet ergonomis untuk layar ponsel.
 - **3D Digital Twin Diorama (Three.js / React Three Fiber):** Visualisasi lab dan stasiun pemantauan 3D prosedural langsung di browser tanpa ketergantungan aset eksternal berat (0% risiko latensi unduh atau galat 404/CORS), siklus pencahayaan siang/malam dinamis, partikel mikro atmosfer reaktif terhadap suhu/kelembapan, serta kontrol kamera sentuh anti-hijack (`touch-action: pan-y`).
 - **Sanitasi Data & Penanganan Glitch:** Validasi fisik (`validasiDataFisik`) menolak anomali pembacaan sensor (outlier suhu ≤ 10°C atau -50°C, sentinel ADC 0.00V, dan nilai `null`/`NaN`) tanpa memicu kerusakan visual pada grafik atau tabel.
@@ -67,12 +65,12 @@ Untuk memperpanjang masa pakai baterai hingga berbulan-bulan, ESP8266 beroperasi
 ### 5. Analisis AI Terintegrasi & Tipografi Ergonomis (Opsional)
 
 > [!NOTE]
-> Modul AI ini bersifat **opsional (nilai tambah / *enhancer*)**. Seluruh fungsi inti sistem monitoring — mulai dari perangkat keras ESP8266, penyimpanan Firebase, hingga visualisasi dashboard web (gauge realtime, grafik tren, tabel data, filter tanggal, dan ekspor CSV) — berfungsi penuh 100% secara mandiri tanpa memerlukan instalasi Ollama maupun eksekusi skrip Python.
+> Modul AI ini bersifat **opsional (nilai tambah / _enhancer_)**. Seluruh fungsi inti sistem monitoring — mulai dari perangkat keras ESP8266, penyimpanan Firebase, hingga visualisasi dashboard web (gauge realtime, grafik tren, tabel data, filter tanggal, dan ekspor CSV) — berfungsi penuh 100% secara mandiri tanpa memerlukan instalasi Ollama maupun eksekusi skrip Python.
 
 - **Korelasi Triangulasi Data:** Memadukan riwayat 7 hari ruangan dengan data meteorologi luar ruangan (OpenWeatherMap), siklus matahari (Sunrise-Sunset API), dan indeks polusi udara (WAQI).
-- **Deteksi Pelepasan Panas Malam (*Thermal Lag*):** Menganalisis potensi *heat trap* dan risiko proliferasi jamur ruangan saat ventilasi pasif kurang memadai.
+- **Deteksi Pelepasan Panas Malam (_Thermal Lag_):** Menganalisis potensi _heat trap_ dan risiko proliferasi jamur ruangan saat ventilasi pasif kurang memadai.
 - **Sistem Multi-Model Fallback:** Mencoba daftar model LLM dari yang terakurat hingga model cadangan paling ringan secara otomatis.
-- **Ergonomi Membaca & Anti-Halation:** Desain modal AI menerapkan batas lebar baris nyaman (`max-width: 68ch`), kontras warna anti-silau Slate-300 (`#cbd5e1`), penataan ringkasan eksekutif 3 poin di posisi teratas, eliminasi *bold fatigue*, dan pembersihan otomatis notasi matematis LaTeX.
+- **Ergonomi Membaca & Anti-Halation:** Desain modal AI menerapkan batas lebar baris nyaman (`max-width: 68ch`), kontras warna anti-silau Slate-300 (`#cbd5e1`), penataan ringkasan eksekutif 3 poin di posisi teratas, eliminasi _bold fatigue_, dan pembersihan otomatis notasi matematis LaTeX.
 
 ---
 
@@ -111,28 +109,28 @@ flowchart TD
 
 ### 1. Komponen yang Dibutuhkan
 
-| No  | Komponen | Spesifikasi Rekomendasi | Fungsi Utama |
-| :-: | :--- | :--- | :--- |
-| 1 | **Mikrokontroler** | Wemos D1 Mini (ESP8266 ESP-12F) | Pemroses data dan pemancar WiFi |
-| 2 | **Sensor Suhu & RH** | Modul AHT20 (Antarmuka I2C) | Pembaca temperatur dan kelembapan |
-| 3 | **Sensor Barometrik** | Modul BMP280 (Antarmuka I2C) | Pembaca tekanan udara atmosfer |
-| 4 | **Catu Daya** | 3x Sel Li-ion 18650 Paralel + BMS 1S | Pasokan daya mandiri (~10.050 mAh) |
-| 5 | **Resistor Pembagi Tegangan** | 100 kΩ (Toleransi 1%, 1/4 Watt) | Pembagi tegangan pin pembaca ADC `A0` |
-| 6 | **Kabel Jumper** | Jumper Dupont Female-Female | Sambungan antar pin dan sinyal RTC `D0` ➔ `RST` |
+| No  | Komponen                      | Spesifikasi Rekomendasi              | Fungsi Utama                                    |
+| :-: | :---------------------------- | :----------------------------------- | :---------------------------------------------- |
+|  1  | **Mikrokontroler**            | Wemos D1 Mini (ESP8266 ESP-12F)      | Pemroses data dan pemancar WiFi                 |
+|  2  | **Sensor Suhu & RH**          | Modul AHT20 (Antarmuka I2C)          | Pembaca temperatur dan kelembapan               |
+|  3  | **Sensor Barometrik**         | Modul BMP280 (Antarmuka I2C)         | Pembaca tekanan udara atmosfer                  |
+|  4  | **Catu Daya**                 | 3x Sel Li-ion 18650 Paralel + BMS 1S | Pasokan daya mandiri (~10.050 mAh)              |
+|  5  | **Resistor Pembagi Tegangan** | 100 kΩ (Toleransi 1%, 1/4 Watt)      | Pembagi tegangan pin pembaca ADC `A0`           |
+|  6  | **Kabel Jumper**              | Jumper Dupont Female-Female          | Sambungan antar pin dan sinyal RTC `D0` ➔ `RST` |
 
 ### 2. Panduan Sambungan Pin (Pinout)
 
-| Jalur Sistem | Pin Sensor / Modul | Pin Wemos D1 Mini | Keterangan Sambungan |
-| :--- | :--- | :--- | :--- |
-| **I2C Bus (Bersama)** | `SCL` (AHT20 & BMP280) | `D1 (GPIO 5)` | Jalur Clock I2C |
-| | `SDA` (AHT20 & BMP280) | `D2 (GPIO 4)` | Jalur Data I2C |
-| | `VCC` (AHT20 & BMP280) | `3V3` | Pasokan tegangan teregulasi 3.3V |
-| | `GND` (AHT20 & BMP280) | `G (GND)` | Ground bersama |
-| **Deep Sleep Timer** | - | `D0 (GPIO 16)` ➔ `RST` | Penghantar pulsa LOW timer RTC internal ke pin Reset |
-| **Pembagi Tegangan Baterai** | Kutub Positif Baterai `(+)` | Seri Resistor 100kΩ ➔ `A0` | Mengonversi skala tegangan 4.2V ke batas aman ADC 3.2V |
-| **Masukan Daya Sistem** | Baterai `(+)` via BMS | `5V` / `VCC` | Masuk ke input Low-Dropout Regulator (LDO) internal |
-| | Baterai `(-)` via BMS | `G (GND)` | Referensi ground catu daya |
-| **Setup WiFi (Jumper)** | Kabel Jumper Service | `D5 (GPIO 14)` ➔ `G (GND)` | Hubungkan ke GND untuk memicu Captive Portal web saat ingin ganti WiFi |
+| Jalur Sistem                 | Pin Sensor / Modul          | Pin Wemos D1 Mini          | Keterangan Sambungan                                                   |
+| :--------------------------- | :-------------------------- | :------------------------- | :--------------------------------------------------------------------- |
+| **I2C Bus (Bersama)**        | `SCL` (AHT20 & BMP280)      | `D1 (GPIO 5)`              | Jalur Clock I2C                                                        |
+|                              | `SDA` (AHT20 & BMP280)      | `D2 (GPIO 4)`              | Jalur Data I2C                                                         |
+|                              | `VCC` (AHT20 & BMP280)      | `3V3`                      | Pasokan tegangan teregulasi 3.3V                                       |
+|                              | `GND` (AHT20 & BMP280)      | `G (GND)`                  | Ground bersama                                                         |
+| **Deep Sleep Timer**         | -                           | `D0 (GPIO 16)` ➔ `RST`     | Penghantar pulsa LOW timer RTC internal ke pin Reset                   |
+| **Pembagi Tegangan Baterai** | Kutub Positif Baterai `(+)` | Seri Resistor 100kΩ ➔ `A0` | Mengonversi skala tegangan 4.2V ke batas aman ADC 3.2V                 |
+| **Masukan Daya Sistem**      | Baterai `(+)` via BMS       | `5V` / `VCC`               | Masuk ke input Low-Dropout Regulator (LDO) internal                    |
+|                              | Baterai `(-)` via BMS       | `G (GND)`                  | Referensi ground catu daya                                             |
+| **Setup WiFi (Jumper)**      | Kabel Jumper Service        | `D5 (GPIO 14)` ➔ `G (GND)` | Hubungkan ke GND untuk memicu Captive Portal web saat ingin ganti WiFi |
 
 > [!NOTE]
 > Pin `A0` Wemos D1 Mini secara internal sudah memiliki rangkaian pembagi tegangan 220kΩ : 100kΩ (maksimum 3.2V). Pemasangan resistor tambahan 100kΩ secara seri di luar pin `A0` menggeser rentang ukur hingga ~4.3V, sehingga ideal untuk membaca tegangan sel lithium saat kondisi penuh (4.2V).
@@ -155,7 +153,7 @@ Semua komponen eksternal yang dipakai dalam repositori ini dapat digunakan secar
    - [Ollama CLI](https://ollama.com/download) (khusus jika ingin menjalankan AI secara mandiri)
 3. **Layanan Cloud & API Gratis:**
    - **Firebase Spark Plan:** Kuota gratis Realtime Database (1 GB penyimpanan, transfer 10 GB/bulan).
-   - **OpenWeatherMap API:** Paket *Current Weather* gratis hingga 1.000 panggilan/hari (skrip IoT hanya membutuhkan 1–2 panggilan/hari).
+   - **OpenWeatherMap API:** Paket _Current Weather_ gratis hingga 1.000 panggilan/hari (skrip IoT hanya membutuhkan 1–2 panggilan/hari).
    - **WAQI API:** Token pengembang gratis tanpa batas waktu untuk data stasiun kualitas udara dunia.
    - **Sunrise-Sunset API:** 100% gratis publik, tanpa registrasi, dan tanpa API Key.
 
@@ -169,7 +167,7 @@ Ikuti tahapan berurutan berikut untuk menjalankan keseluruhan ekosistem proyek s
 
 1. Buka [Firebase Console](https://console.firebase.google.com/) dan buat proyek baru (nonaktifkan Google Analytics jika tidak diperlukan).
 2. Di menu navigasi samping, klik **Build > Realtime Database**, lalu klik **Create Database**.
-3. Pilih lokasi server terdekat (disarankan `Singapore (asia-southeast1)`). Pilih mode *Start in locked mode*.
+3. Pilih lokasi server terdekat (disarankan `Singapore (asia-southeast1)`). Pilih mode _Start in locked mode_.
 4. Salin URL database yang terbentuk (format: `https://<nama-proyek>-asia-southeast1.firebasedatabase.app/`).
 5. Buka tab **Rules** pada Realtime Database, tempel aturan keamanan berikut, lalu klik **Publish**:
 
@@ -190,7 +188,7 @@ Ikuti tahapan berurutan berikut untuk menjalankan keseluruhan ekosistem proyek s
 ```
 
 6. Dapatkan kredensial untuk masing-masing bagian:
-   - **Untuk Firmware ESP8266:** Buka ikon gerigi (*Project Settings*) > **Service Accounts** > **Database Secrets** > salin secret token database Anda.
+   - **Untuk Firmware ESP8266:** Buka ikon gerigi (_Project Settings_) > **Service Accounts** > **Database Secrets** > salin secret token database Anda.
    - **Untuk Dashboard Web:** Pada halaman ringkasan proyek, daftarkan aplikasi web (**Web </>**), lalu salin blok objek `firebaseConfig`. Masukkan kredensial ini ke berkas [src/services/firebase.ts](src/services/firebase.ts).
    - **Untuk Skrip Python AI:** Buka **Project Settings** > **Service Accounts** > klik tombol **Generate new private key** untuk mengunduh berkas kredensial JSON. Simpan berkas ini di direktori akar repositori.
 
@@ -199,7 +197,7 @@ Ikuti tahapan berurutan berikut untuk menjalankan keseluruhan ekosistem proyek s
 ### Tahap 2: Flashing Firmware ESP8266
 
 1. Buka Arduino IDE.
-2. Tambahkan URL Board ESP8266: Buka **File > Preferences**, pada kolom *Additional Boards Manager URLs* masukkan:
+2. Tambahkan URL Board ESP8266: Buka **File > Preferences**, pada kolom _Additional Boards Manager URLs_ masukkan:
    ```text
    http://arduino.esp8266.com/stable/package_esp8266com_index.json
    ```
@@ -219,7 +217,7 @@ Ikuti tahapan berurutan berikut untuk menjalankan keseluruhan ekosistem proyek s
    #define DATABASE_URL "url-proyek-anda-default-rtdb.asia-southeast1.firebasedatabase.app"
    #define FIREBASE_AUTH "DATABASE_SECRET_TOKEN_ANDA"
    ```
-   *(Kredensial WiFi tidak lagi ditulis di dalam kode, melainkan diatur langsung dari HP via Captive Portal).*
+   _(Kredensial WiFi tidak lagi ditulis di dalam kode, melainkan diatur langsung dari HP via Captive Portal)._
 8. **PENTING SAAT FLASHING:**
    - **Lepaskan jumper dari pin `D0` ke `RST`.** (Jika jumper masih terpasang, ESP8266 tidak dapat memasuki mode bootloader flashing).
    - Pastikan baterai dilepas dari Wemos. Hubungkan Wemos ke komputer dengan kabel data micro-USB.
@@ -227,38 +225,42 @@ Ikuti tahapan berurutan berikut untuk menjalankan keseluruhan ekosistem proyek s
    - Klik tombol **Upload**.
 9. **Pasang Kembali Jumper Deep Sleep:**
    - Cabut kabel USB dari komputer.
-   - **Pasang kembali jumper dari pin `D0` ke `RST`** agar fitur *auto wake-up* Deep Sleep dapat bekerja.
+   - **Pasang kembali jumper dari pin `D0` ke `RST`** agar fitur _auto wake-up_ Deep Sleep dapat bekerja.
    - Sambungkan konektor baterai.
 
 ---
 
 ### Panduan Konfigurasi & Pergantian WiFi (Captive Portal)
 
-Sistem ini tidak memerlukan *flashing* ulang atau edit kode saat berpindah jaringan WiFi. Konfigurasi dilakukan langsung melalui halaman web di smartphone/laptop:
+Sistem ini tidak memerlukan _flashing_ ulang atau edit kode saat berpindah jaringan WiFi. Konfigurasi dilakukan langsung melalui halaman web di smartphone/laptop:
 
 #### A. Setup Pertama Kali (Setelah Flash Firmware Baru)
+
 Karena memori flash ESP8266 masih kosong (belum ada WiFi tersimpan), perangkat akan **otomatis** masuk ke mode konfigurasi saat dinyalakan:
+
 1. Sambungkan baterai untuk menyalakan perangkat.
 2. Buka menu WiFi di smartphone atau laptop Anda, cari dan sambungkan ke jaringan:
    - **SSID Hotspot:** `MonitoringSuhu-Setup`
-   - **Password:** *(Tanpa password / Open)*
-3. Jendela login (*Captive Portal*) akan otomatis terbuka di layar. Jika tidak muncul otomatis, buka browser dan akses alamat IP:
+   - **Password:** _(Tanpa password / Open)_
+3. Jendela login (_Captive Portal_) akan otomatis terbuka di layar. Jika tidak muncul otomatis, buka browser dan akses alamat IP:
    ```text
    http://192.168.4.1
    ```
 4. Klik menu **Configure WiFi**.
 5. Pilih nama WiFi rumah/ruangan Anda dari daftar yang terdeteksi, masukkan kata sandi WiFi, lalu klik tombol **Save**.
-6. ESP8266 akan menyimpan kredensial ke memori internal, melakukan *restart*, dan langsung mulai membaca sensor serta mengirim data ke Firebase setiap 5 menit (Deep Sleep).
+6. ESP8266 akan menyimpan kredensial ke memori internal, melakukan _restart_, dan langsung mulai membaca sensor serta mengirim data ke Firebase setiap 5 menit (Deep Sleep).
 
 #### B. Cara Mengganti SSID & Password di Kemudian Hari (Ganti Router / Pindah Lokasi)
+
 Apabila router diganti, kata sandi diubah, atau perangkat dipindahkan ke tempat lain:
+
 1. Siapkan 1 buah kabel jumper Dupont (Female-Female).
 2. Hubungkan pin **`D5 (GPIO 14)`** ke pin **`G (GND)`** pada board Wemos D1 Mini.
 3. Tekan tombol **RST** kecil pada papan Wemos (atau cabut-pasang baterai) untuk menyalakannya kembali.
 4. Perangkat mendeteksi pin `D5` terhubung ke GND dan langsung membuka hotspot **`MonitoringSuhu-Setup`**.
 5. Sambungkan HP ke hotspot `MonitoringSuhu-Setup` ➔ buka `http://192.168.4.1` ➔ pilih WiFi baru & masukkan kata sandi baru ➔ klik **Save**.
 6. **Cabut kabel jumper dari pin `D5`**.
-7. ESP8266 mendeteksi kabel jumper telah dilepas, otomatis melakukan *restart*, dan langsung beroperasi normal pada jaringan WiFi yang baru.
+7. ESP8266 mendeteksi kabel jumper telah dilepas, otomatis melakukan _restart_, dan langsung beroperasi normal pada jaringan WiFi yang baru.
 
 ---
 
@@ -278,7 +280,8 @@ Dashboard dibangun menggunakan arsitektur modern berbasis React 18, TypeScript, 
    export const firebaseConfig = {
      apiKey: "AIzaSy...",
      authDomain: "proyek-anda.firebaseapp.com",
-     databaseURL: "https://proyek-anda-default-rtdb.asia-southeast1.firebasedatabase.app",
+     databaseURL:
+       "https://proyek-anda-default-rtdb.asia-southeast1.firebasedatabase.app",
      projectId: "proyek-anda",
      storageBucket: "proyek-anda.firebasestorage.app",
      messagingSenderId: "...",
@@ -286,12 +289,14 @@ Dashboard dibangun menggunakan arsitektur modern berbasis React 18, TypeScript, 
    };
    ```
 4. Jalankan development server lokal:
+
    ```bash
    npm run dev
    ```
+
    Buka peramban di alamat: `http://localhost:3000` (atau port yang ditampilkan terminal).
 
-5. *(Opsional)* Jalankan test suite dan verifikasi bundle produksi lokal:
+5. _(Opsional)_ Jalankan test suite dan verifikasi bundle produksi lokal:
    ```bash
    npm test          # Menjalankan seluruh automated unit tests via Vitest
    npm run build     # Menghasilkan bundle produksi teroptimasi di folder dist/
@@ -311,7 +316,7 @@ Repositori ini sudah terkonfigurasi dengan alur kerja CI/CD otomatis pada [.gith
    git push origin main
    ```
 4. Di halaman repositori GitHub Anda, buka **Settings > Pages**.
-5. Pada bagian **Build and deployment > Source**, pilih **GitHub Actions** (bukan *Deploy from a branch*).
+5. Pada bagian **Build and deployment > Source**, pilih **GitHub Actions** (bukan _Deploy from a branch_).
 6. Alur kerja GitHub Actions akan otomatis terpicu pada setiap push ke branch `main`: memasang dependensi (`npm ci`), melakukan validasi TypeScript dan build Vite (`npm run build`), lalu mempublikasikan folder `./dist` ke GitHub Pages.
 7. Dashboard Anda akan aktif di URL: `https://<username>.github.io/<nama-repo>/`.
 
@@ -320,13 +325,14 @@ Repositori ini sudah terkonfigurasi dengan alur kerja CI/CD otomatis pada [.gith
 ### Tahap 4: Setup & Eksekusi Analisis AI via Ollama (Opsional)
 
 > [!TIP]
-> **Langkah ini sepenuhnya opsional.** Jika Anda hanya membutuhkan sistem monitoring realtime via web dashboard dan penyimpanan data riwayat, Anda dapat melewati tahap ini. Apabila skrip AI belum pernah dijalankan, tombol *AI Insight* pada dashboard web hanya akan menampilkan status ramah tanpa mengganggu operasional sistem.
+> **Langkah ini sepenuhnya opsional.** Jika Anda hanya membutuhkan sistem monitoring realtime via web dashboard dan penyimpanan data riwayat, Anda dapat melewati tahap ini. Apabila skrip AI belum pernah dijalankan, tombol _AI Insight_ pada dashboard web hanya akan menampilkan status ramah tanpa mengganggu operasional sistem.
 
 Modul ini memproses riwayat telemetri secara lokal tanpa mengirim data pribadi ke penyedia cloud berbayar.
 
 1. **Instalasi Ollama & Pengunduhan Model:**
    - Unduh dan pasang Ollama dari [ollama.com](https://ollama.com/).
    - Buka terminal, unduh model bahasa standar yang diinginkan (pilih sesuai kapasitas RAM komputer Anda):
+
      ```bash
      # Rekomendasi seimbang (RAM 8 GB - 16 GB):
      ollama pull llama3:8b
@@ -336,6 +342,7 @@ Modul ini memproses riwayat telemetri secara lokal tanpa mengirim data pribadi k
      # atau
      ollama pull gemma2:2b
      ```
+
 2. **Pasang Dependensi Python:**
    ```bash
    pip install firebase-admin pandas requests ollama
@@ -346,6 +353,7 @@ Modul ini memproses riwayat telemetri secara lokal tanpa mengirim data pribadi k
      cp analisa_lab_contoh.py analisa_lab.py
      ```
    - Buka [analisa_lab.py](analisa_lab.py) dan sesuaikan nilainya:
+
      ```python
      FIREBASE_KEY_PATH = "berkas-service-account-firebase-anda.json"
      FIREBASE_DB_URL = "https://<nama-proyek>-asia-southeast1.firebasedatabase.app/"
@@ -364,13 +372,14 @@ Modul ini memproses riwayat telemetri secara lokal tanpa mengirim data pribadi k
          "gemma2:2b"
      ]
      ```
+
 4. **Jalankan Skrip:**
    ```bash
    python analisa_lab.py
    ```
-   *Skrip akan memvalidasi data 7 hari terakhir, membersihkan outlier sensor, menarik data cuaca luar, menyusun analisis objektif via Ollama, menyimpan berkas teks lokal, dan mengunggah hasil laporan ke node `/LAPORAN_AI` di Firebase.*
+   _Skrip akan memvalidasi data 7 hari terakhir, membersihkan outlier sensor, menarik data cuaca luar, menyusun analisis objektif via Ollama, menyimpan berkas teks lokal, dan mengunggah hasil laporan ke node `/LAPORAN_AI` di Firebase._
 5. **Otomatisasi Penjadwalan (Opsional):**
-   - **Windows:** Buka *Task Scheduler*, buat tugas berkala yang menjalankan perintah `python C:\jalur\proyek\analisa_lab.py` setiap pukul 06:00 dan 18:00 WIB.
+   - **Windows:** Buka _Task Scheduler_, buat tugas berkala yang menjalankan perintah `python C:\jalur\proyek\analisa_lab.py` setiap pukul 06:00 dan 18:00 WIB.
    - **Linux / macOS:** Tambahkan baris cron via `crontab -e`:
      ```text
      0 6,18 * * * /usr/bin/python3 /path/to/AeroNest/analisa_lab.py
@@ -391,7 +400,7 @@ Untuk mencegah kuota penyimpanan gratis Firebase melampaui batas, lakukan pember
    ```bash
    python maintenance_db.py
    ```
-   *Skrip otomatis mengunduh seluruh isi database menjadi file arsip JSON lokal bertanggal (`Backup_Firebase_YYYY-MM-DD_HH-MM-SS.json`) sebelum meminta konfirmasi Anda untuk menghapus rekaman lama di atas rentang hari tertentu.*
+   _Skrip otomatis mengunduh seluruh isi database menjadi file arsip JSON lokal bertanggal (`Backup_Firebase_YYYY-MM-DD_HH-MM-SS.json`) sebelum meminta konfirmasi Anda untuk menghapus rekaman lama di atas rentang hari tertentu._
 
 ---
 
@@ -402,7 +411,7 @@ Untuk mencegah kuota penyimpanan gratis Firebase melampaui batas, lakukan pember
 │   └── workflows/
 │       └── deploy.yml                   # CI/CD otomatis deployment ke GitHub Pages via Vite
 ├── Assets/                              # Gambar antarmuka dashboard untuk dokumentasi
-│   ├── Desktop_home.png
+│   ├── desktop_home.avif
 │   ├── desktop_modal_ai.avif
 │   ├── mobile_home.avif
 │   └── mobile_modal_ai.avif
@@ -448,15 +457,15 @@ Untuk mencegah kuota penyimpanan gratis Firebase melampaui batas, lakukan pember
 
 ## Panduan Solusi Kendala (Troubleshooting FAQ)
 
-| Gejala Masalah | Kemungkinan Penyebab Utama | Solusi Penanganan |
-| :--- | :--- | :--- |
-| **Gagal upload program Arduino (`timed out / espcomm_upload_mem failed`)** | Kabel jumper `D0` ➔ `RST` masih terpasang saat USB dihubungkan. | Lepas kabel jumper `D0` ke `RST`. Pasang kembali hanya setelah proses upload 100% selesai. |
-| **Wemos tidak mau bangun dari Deep Sleep setelah 5 menit** | Pin `D0` (GPIO 16) belum terhubung ke pin `RST`. | Pasang jumper dari `D0` ke `RST`. Timer deep sleep internal membutuhkan jalur ini untuk menarik logika reset ke LOW saat timer habis. |
-| **Sensor tidak terdeteksi (`AHT20/BMP280 tidak ditemukan`)** | Sambungan bus I2C longgar atau alamat I2C bentrok. | Periksa kabel jumper SDA (`D2`) dan SCL (`D1`). Pastikan modul BMP280 menggunakan alamat `0x76` atau `0x77` (sesuaikan pada baris `bmp.begin(0x76)`). |
-| **Tegangan baterai terbaca `0.00 V` di dashboard web** | Resistor pembagi tegangan 100kΩ belum terhubung ke pin `A0`. | Hubungkan kutub positif baterai melalui resistor 100kΩ seri ke pin `A0` Wemos. |
-| **Dashboard web menampilkan status "--" atau data kosong** | Aturan keamanan Firebase belum mengizinkan izin baca publik. | Buka tab *Rules* di Firebase RTDB dan pastikan opsi `".read": true` aktif untuk path `RIWAYAT_LAB` dan `LAPORAN_AI`. |
-| **Dashboard web gagal tampil saat dibuka via server file statis biasa** | Dashboard modern berbasis Vite memerlukan proses kompilasi TypeScript dan bundler modul. | Jalankan via perintah `npm run dev` untuk development lokal, atau gunakan `npm run preview` setelah `npm run build`. |
-| **Skrip Python gagal menghubungi Ollama (`Connection refused`)** | Aplikasi Ollama belum aktif di komputer host. | Pastikan aplikasi Ollama berjalan di latar belakang (layanan aktif di `http://127.0.0.1:11434`). |
+| Gejala Masalah                                                             | Kemungkinan Penyebab Utama                                                               | Solusi Penanganan                                                                                                                                     |
+| :------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Gagal upload program Arduino (`timed out / espcomm_upload_mem failed`)** | Kabel jumper `D0` ➔ `RST` masih terpasang saat USB dihubungkan.                          | Lepas kabel jumper `D0` ke `RST`. Pasang kembali hanya setelah proses upload 100% selesai.                                                            |
+| **Wemos tidak mau bangun dari Deep Sleep setelah 5 menit**                 | Pin `D0` (GPIO 16) belum terhubung ke pin `RST`.                                         | Pasang jumper dari `D0` ke `RST`. Timer deep sleep internal membutuhkan jalur ini untuk menarik logika reset ke LOW saat timer habis.                 |
+| **Sensor tidak terdeteksi (`AHT20/BMP280 tidak ditemukan`)**               | Sambungan bus I2C longgar atau alamat I2C bentrok.                                       | Periksa kabel jumper SDA (`D2`) dan SCL (`D1`). Pastikan modul BMP280 menggunakan alamat `0x76` atau `0x77` (sesuaikan pada baris `bmp.begin(0x76)`). |
+| **Tegangan baterai terbaca `0.00 V` di dashboard web**                     | Resistor pembagi tegangan 100kΩ belum terhubung ke pin `A0`.                             | Hubungkan kutub positif baterai melalui resistor 100kΩ seri ke pin `A0` Wemos.                                                                        |
+| **Dashboard web menampilkan status "--" atau data kosong**                 | Aturan keamanan Firebase belum mengizinkan izin baca publik.                             | Buka tab _Rules_ di Firebase RTDB dan pastikan opsi `".read": true` aktif untuk path `RIWAYAT_LAB` dan `LAPORAN_AI`.                                  |
+| **Dashboard web gagal tampil saat dibuka via server file statis biasa**    | Dashboard modern berbasis Vite memerlukan proses kompilasi TypeScript dan bundler modul. | Jalankan via perintah `npm run dev` untuk development lokal, atau gunakan `npm run preview` setelah `npm run build`.                                  |
+| **Skrip Python gagal menghubungi Ollama (`Connection refused`)**           | Aplikasi Ollama belum aktif di komputer host.                                            | Pastikan aplikasi Ollama berjalan di latar belakang (layanan aktif di `http://127.0.0.1:11434`).                                                      |
 
 ---
 
